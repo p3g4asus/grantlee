@@ -168,13 +168,8 @@ bool Grantlee::equals(const QVariant &lhs, const QVariant &rhs)
   return equal;
 }
 
-Grantlee::SafeString Grantlee::toString(const QVariantList &list)
-{
-  QString output(QLatin1Char('['));
-  auto it = list.constBegin();
-  const auto end = list.constEnd();
-  while (it != end) {
-    const auto item = *it;
+Grantlee::SafeString Grantlee::toString(const QVariant &item) {
+    QString output;
     if (isSafeString(item)) {
       output += QStringLiteral("u\'")
                 + static_cast<QString>(getSafeString(item).get())
@@ -192,6 +187,18 @@ Grantlee::SafeString Grantlee::toString(const QVariantList &list)
       output
           += static_cast<QString>(toString(item.value<QVariantList>()).get());
     }
+    return output;
+
+}
+
+Grantlee::SafeString Grantlee::toString(const QVariantList &list)
+{
+  QString output(QLatin1Char('['));
+  auto it = list.constBegin();
+  const auto end = list.constEnd();
+  while (it != end) {
+    const auto item = *it;
+    output += toString(item);
     if ((it + 1) != end)
       output += QStringLiteral(", ");
     ++it;

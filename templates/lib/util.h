@@ -94,6 +94,8 @@ GRANTLEE_TEMPLATES_EXPORT bool equals(const QVariant &lhs, const QVariant &rhs);
 */
 GRANTLEE_TEMPLATES_EXPORT Grantlee::SafeString
 toString(const QVariantList &list);
+GRANTLEE_TEMPLATES_EXPORT Grantlee::SafeString
+toString(const QVariant &var);
 #endif
 }
 

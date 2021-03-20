@@ -89,7 +89,7 @@ set( CMAKE_INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR})
 set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 include("${Grantlee_MODULE_DIR}/GrantleeMacros.cmake")
-
+find_package(Qt5 COMPONENTS Core REQUIRED)
 if (BUILD_TEMPLATES)
   add_subdirectory(templates)
 endif()

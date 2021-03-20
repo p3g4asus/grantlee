@@ -182,15 +182,41 @@ QVariant StringFormatFilter::doFilter(const QVariant &input,
                                       bool autoescape) const
 {
   Q_UNUSED(autoescape)
-  SafeString a;
-  if (isSafeString(input))
-    a = getSafeString(input);
-  else if (input.userType() == qMetaTypeId<QVariantList>()) {
-    a = toString(input.value<QVariantList>());
-  }
+  QString output;
+  SafeString inputSafe = getSafeString(input);
+  QString stringContent = getSafeString(argument).get();
+  QByteArray utf8Str = stringContent.toUtf8();
+  const char * data = utf8Str.constData();
 
-  return SafeString(getSafeString(argument).get().arg(a),
-                    getSafeString(input).isSafe());
+  int ut = input.userType();
+  if (ut == qMetaTypeId<int>()) {
+      output = QString::asprintf(data, input.value<int>());
+  }
+  else if (ut == qMetaTypeId<uint>()) {
+      output = QString::asprintf(data, input.value<uint>());
+  }
+  else if (ut == qMetaTypeId<double>()) {
+      output = QString::asprintf(data, input.value<double>());
+  }
+  else if (ut == qMetaTypeId<float>()) {
+      output = QString::asprintf(data, input.value<float>());
+  }
+  else if (ut == qMetaTypeId<long long>()) {
+      output = QString::asprintf(data, input.value<long long>());
+  }
+  else if (ut == qMetaTypeId<unsigned long long>()) {
+      output = QString::asprintf(data, input.value<unsigned long long>());
+  }
+  else if (ut == qMetaTypeId<bool>()) {
+      output = QString::asprintf(data, input.value<bool>());
+  }
+  else if (isSafeString(input)) {
+      output = QString::asprintf(data, inputSafe.get().toUtf8().constData());
+  }
+  else {
+      output = QString::asprintf(data, toString(input).get().toUtf8().constData());
+  }
+  return SafeString(output, inputSafe.isSafe());
 }
 
 QVariant TitleFilter::doFilter(const QVariant &input, const QVariant &argument,

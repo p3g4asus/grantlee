@@ -247,9 +247,13 @@ QString EnginePrivate::getScriptLibraryName(const QString &name,
                                             uint minorVersion) const
 {
   auto pluginIndex = 0;
+#ifdef Q_OS_ANDROID
+  const QString prefix = QStringLiteral("/");
+#else
   const QString prefix
       = QStringLiteral("/grantlee/") + QString::number(GRANTLEE_VERSION_MAJOR)
         + QLatin1Char('.') + QString::number(minorVersion) + QLatin1Char('/');
+#endif
   while (m_pluginDirs.size() > pluginIndex) {
     const auto nextDir = m_pluginDirs.at(pluginIndex++);
     const QString libFileName = nextDir + prefix + name + QStringLiteral(".qs");
@@ -315,11 +319,15 @@ EnginePrivate::loadCppLibrary(const QString &name, uint minorVersion)
 
   while (m_pluginDirs.size() > pluginIndex) {
     const auto nextDir = m_pluginDirs.at(pluginIndex++);
+#ifdef Q_OS_ANDROID
+    const QString pluginDirString
+        = nextDir + QLatin1Char('/');
+#else
     const QString pluginDirString
         = nextDir + QStringLiteral("/grantlee/")
           + QString::number(GRANTLEE_VERSION_MAJOR) + QLatin1Char('.')
           + QString::number(minorVersion) + QLatin1Char('/');
-
+#endif
     const QDir pluginDir(pluginDirString);
 
     if (!pluginDir.exists())
