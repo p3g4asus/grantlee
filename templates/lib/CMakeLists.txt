@@ -8,50 +8,95 @@ configure_file(grantlee_config_p.h.cmake  ${CMAKE_CURRENT_BINARY_DIR}/grantlee_c
 set_source_files_properties(taglibraryinterface.h PROPERTIES
   SKIP_AUTOMOC TRUE
 )
+if(APPLE)
+    add_library(Grantlee_Templates STATIC
+      abstractlocalizer.cpp
+      cachingloaderdecorator.cpp
+      customtyperegistry.cpp
+      context.cpp
+      engine.cpp
+      filter.cpp
+      filterexpression.cpp
+      lexer.cpp
+      metatype.cpp
+      node.cpp
+      nodebuiltins.cpp
+      nulllocalizer.cpp
+      outputstream.cpp
+      parser.cpp
+      qtlocalizer.cpp
+      rendercontext.cpp
+      safestring.cpp
+      template.cpp
+      templateloader.cpp
+      textprocessingmachine.cpp
+      typeaccessors.cpp
+      util.cpp
+      variable.cpp
 
-add_library(Grantlee_Templates SHARED
-  abstractlocalizer.cpp
-  cachingloaderdecorator.cpp
-  customtyperegistry.cpp
-  context.cpp
-  engine.cpp
-  filter.cpp
-  filterexpression.cpp
-  lexer.cpp
-  metatype.cpp
-  node.cpp
-  nodebuiltins.cpp
-  nulllocalizer.cpp
-  outputstream.cpp
-  parser.cpp
-  qtlocalizer.cpp
-  rendercontext.cpp
-  safestring.cpp
-  template.cpp
-  templateloader.cpp
-  textprocessingmachine.cpp
-  typeaccessors.cpp
-  util.cpp
-  variable.cpp
+      # Help IDEs find some non-compiled files.
+      customtyperegistry_p.h
+      engine_p.h
+      exception.h
+      grantlee_tags_p.h
+      grantlee_templates.h
+      lexer_p.h
+      metaenumvariable_p.h
+      nodebuiltins_p.h
+      nulllocalizer_p.h
+      pluginpointer_p.h
+      statemachine_p.h
+      taglibraryinterface.h
+      template_p.h
+      textprocessingmachine_p.h
+      token.h
+      typeaccessor.h
+    )
+else()
+    add_library(Grantlee_Templates SHARED
+      abstractlocalizer.cpp
+      cachingloaderdecorator.cpp
+      customtyperegistry.cpp
+      context.cpp
+      engine.cpp
+      filter.cpp
+      filterexpression.cpp
+      lexer.cpp
+      metatype.cpp
+      node.cpp
+      nodebuiltins.cpp
+      nulllocalizer.cpp
+      outputstream.cpp
+      parser.cpp
+      qtlocalizer.cpp
+      rendercontext.cpp
+      safestring.cpp
+      template.cpp
+      templateloader.cpp
+      textprocessingmachine.cpp
+      typeaccessors.cpp
+      util.cpp
+      variable.cpp
 
-  # Help IDEs find some non-compiled files.
-  customtyperegistry_p.h
-  engine_p.h
-  exception.h
-  grantlee_tags_p.h
-  grantlee_templates.h
-  lexer_p.h
-  metaenumvariable_p.h
-  nodebuiltins_p.h
-  nulllocalizer_p.h
-  pluginpointer_p.h
-  statemachine_p.h
-  taglibraryinterface.h
-  template_p.h
-  textprocessingmachine_p.h
-  token.h
-  typeaccessor.h
-)
+      # Help IDEs find some non-compiled files.
+      customtyperegistry_p.h
+      engine_p.h
+      exception.h
+      grantlee_tags_p.h
+      grantlee_templates.h
+      lexer_p.h
+      metaenumvariable_p.h
+      nodebuiltins_p.h
+      nulllocalizer_p.h
+      pluginpointer_p.h
+      statemachine_p.h
+      taglibraryinterface.h
+      template_p.h
+      textprocessingmachine_p.h
+      token.h
+      typeaccessor.h
+    )
+endif()
 add_library(Grantlee5::Templates ALIAS Grantlee_Templates)
 generate_export_header(Grantlee_Templates)
 set_property(TARGET Grantlee_Templates PROPERTY

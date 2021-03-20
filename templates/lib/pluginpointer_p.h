@@ -56,6 +56,10 @@ public:
     m_plugin = qobject_cast<PluginType *>(m_object);
   }
 
+  PluginPointer(PluginType * inst) : m_object(inst), m_plugin(inst), m_pluginLoader(0)
+  {
+  }
+
   QString errorString() { return m_pluginLoader->errorString(); }
 
   QObject *object() { return m_object; }

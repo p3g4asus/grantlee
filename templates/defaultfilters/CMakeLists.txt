@@ -1,12 +1,29 @@
-add_library(grantlee_defaultfilters MODULE
-  defaultfilters.cpp
-  datetime.cpp
-  integers.cpp
-  lists.cpp
-  logic.cpp
-  misc.cpp
-  stringfilters.cpp
-)
+if (APPLE)
+    add_compile_definitions(QT_STATICPLUGIN)
+    add_library(grantlee_defaultfilters STATIC
+      defaultfilters.cpp
+      datetime.cpp
+      integers.cpp
+      lists.cpp
+      logic.cpp
+      misc.cpp
+      stringfilters.cpp
+    )
+    install(FILES
+      defaultfilters.h
+      DESTINATION include/grantlee COMPONENT Templates
+    )
+else()
+    add_library(grantlee_defaultfilters MODULE
+      defaultfilters.cpp
+      datetime.cpp
+      integers.cpp
+      lists.cpp
+      logic.cpp
+      misc.cpp
+      stringfilters.cpp
+    )
+endif()
 set_property(TARGET grantlee_defaultfilters PROPERTY
     EXPORT_NAME defaultfilters
 )

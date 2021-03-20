@@ -2,13 +2,28 @@ set_source_files_properties(blockcontext.h
   PROPERTIES SKIP_AUTOMOC TRUE
 )
 
-add_library(grantlee_loadertags MODULE
-  loadertags.cpp
-  blockcontext.cpp
-  block.cpp
-  extends.cpp
-  include.cpp
-)
+if (APPLE)
+    add_compile_definitions(QT_STATICPLUGIN)
+    add_library(grantlee_loadertags STATIC
+      loadertags.cpp
+      blockcontext.cpp
+      block.cpp
+      extends.cpp
+      include.cpp
+    )
+    install(FILES
+      loadertags.h
+      DESTINATION include/grantlee COMPONENT Templates
+    )
+else()
+    add_library(grantlee_loadertags MODULE
+      loadertags.cpp
+      blockcontext.cpp
+      block.cpp
+      extends.cpp
+      include.cpp
+    )
+endif()
 set_property(TARGET grantlee_loadertags PROPERTY
   EXPORT_NAME loadertags
 )

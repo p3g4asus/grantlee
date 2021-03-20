@@ -1,12 +1,29 @@
-add_library(grantlee_i18ntags MODULE
-  i18ntags.cpp
-  i18n.cpp
-  i18nc.cpp
-  i18np.cpp
-  i18ncp.cpp
-  l10n_money.cpp
-  with_locale.cpp
-)
+if (APPLE)
+    add_compile_definitions(QT_STATICPLUGIN)
+    add_library(grantlee_i18ntags STATIC
+      i18ntags.cpp
+      i18n.cpp
+      i18nc.cpp
+      i18np.cpp
+      i18ncp.cpp
+      l10n_money.cpp
+      with_locale.cpp
+    )
+    install(FILES
+      i18ntags.h
+      DESTINATION include/grantlee COMPONENT Templates
+    )
+else()
+    add_library(grantlee_i18ntags MODULE
+      i18ntags.cpp
+      i18n.cpp
+      i18nc.cpp
+      i18np.cpp
+      i18ncp.cpp
+      l10n_money.cpp
+      with_locale.cpp
+    )
+endif()
 set_property(TARGET grantlee_i18ntags PROPERTY
   EXPORT_NAME i18ntags
 )

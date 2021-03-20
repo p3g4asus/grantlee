@@ -231,6 +231,8 @@ public:
    */
   void setSmartTrimEnabled(bool enabled);
 
+  void manualPluginLoad(const QString& name, TagLibraryInterface * tli);
+
 #ifndef Q_QDOC
   /**
     @internal

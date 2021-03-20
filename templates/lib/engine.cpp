@@ -90,6 +90,13 @@ void Engine::setPluginPaths(const QStringList &dirs)
   d->m_pluginDirs = dirs;
 }
 
+void Engine::manualPluginLoad(const QString& name, TagLibraryInterface *tli)
+{
+    Q_D(Engine);
+    auto plugin = PluginPointer<TagLibraryInterface>(tli);
+    d->m_libraries.insert(name, plugin);
+}
+
 void Engine::addPluginPath(const QString &dir)
 {
   Q_D(Engine);

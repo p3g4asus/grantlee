@@ -1,25 +1,57 @@
-add_library(grantlee_defaulttags MODULE
-  defaulttags.cpp
-  autoescape.cpp
-  comment.cpp
-  cycle.cpp
-  debug.cpp
-  filtertag.cpp
-  firstof.cpp
-  for.cpp
-  if.cpp
-  ifchanged.cpp
-  ifequal.cpp
-  load.cpp
-  mediafinder.cpp
-  now.cpp
-  range.cpp
-  regroup.cpp
-  spaceless.cpp
-  templatetag.cpp
-  widthratio.cpp
-  with.cpp
-)
+if (APPLE)
+    add_compile_definitions(QT_STATICPLUGIN)
+    add_library(grantlee_defaulttags STATIC
+      defaulttags.cpp
+      autoescape.cpp
+      comment.cpp
+      cycle.cpp
+      debug.cpp
+      filtertag.cpp
+      firstof.cpp
+      for.cpp
+      if.cpp
+      ifchanged.cpp
+      ifequal.cpp
+      load.cpp
+      mediafinder.cpp
+      now.cpp
+      range.cpp
+      regroup.cpp
+      spaceless.cpp
+      templatetag.cpp
+      widthratio.cpp
+      with.cpp
+    )
+    install(FILES
+      defaulttags.h
+      DESTINATION include/grantlee COMPONENT Templates
+    )
+
+else()
+    add_library(grantlee_defaulttags MODULE
+      defaulttags.cpp
+      autoescape.cpp
+      comment.cpp
+      cycle.cpp
+      debug.cpp
+      filtertag.cpp
+      firstof.cpp
+      for.cpp
+      if.cpp
+      ifchanged.cpp
+      ifequal.cpp
+      load.cpp
+      mediafinder.cpp
+      now.cpp
+      range.cpp
+      regroup.cpp
+      spaceless.cpp
+      templatetag.cpp
+      widthratio.cpp
+      with.cpp
+    )
+endif()
+
 set_property(TARGET grantlee_defaulttags PROPERTY
   EXPORT_NAME defaulttags
 )
