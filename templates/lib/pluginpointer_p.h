@@ -39,7 +39,16 @@ template <typename PluginType> class PluginPointer
 public:
   // This allows returning 0 from a function returning a PluginType*
   PluginPointer(_Dummy * = {}) : m_plugin(nullptr) {}
-
+  PluginPointer(const PluginPointer<PluginType>& p) {
+      this->operator=(p);
+  }
+  PluginPointer<PluginType> &operator=(const PluginPointer<PluginType> &other) {
+      m_pluginLoader = other.m_pluginLoader;
+      m_object = other.m_object;
+      m_plugin = other.m_plugin;
+      return *this;
+  }
+  ~PluginPointer() {}
   PluginPointer(const QString &fileName) : m_object(nullptr), m_plugin(nullptr)
   {
     m_pluginLoader = QSharedPointer<QPluginLoader>(new QPluginLoader(fileName));
@@ -56,7 +65,7 @@ public:
     m_plugin = qobject_cast<PluginType *>(m_object);
   }
 
-  PluginPointer(PluginType * inst) : m_object(inst), m_plugin(inst), m_pluginLoader(0)
+  PluginPointer(PluginType * inst) : m_object((QObject *)inst), m_plugin(inst), m_pluginLoader(0)
   {
   }
 

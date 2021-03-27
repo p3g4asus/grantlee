@@ -90,6 +90,23 @@ void Engine::setPluginPaths(const QStringList &dirs)
   d->m_pluginDirs = dirs;
 }
 
+void Engine::manualPluginLoad(TagLibraryInterface *tli)
+{
+    QByteArray className = ((QObject *)tli)->metaObject()->className();
+    QString name;
+    if (className == "DefaultTagLibrary")
+        name = QStringLiteral("grantlee_defaulttags");
+    else if (className == "DefaultFiltersLibrary")
+        name = QStringLiteral("grantlee_defaultfilters");
+    else if (className == "LoaderTagLibrary")
+        name = QStringLiteral("grantlee_loadertags");
+    else if (className == "I18nTagLibrary")
+        name = QStringLiteral("grantlee_i18ntags");
+    if (!name.isEmpty()) {
+        manualPluginLoad(name, tli);
+    }
+}
+
 void Engine::manualPluginLoad(const QString& name, TagLibraryInterface *tli)
 {
     Q_D(Engine);
@@ -367,7 +384,7 @@ EnginePrivate::loadCppLibrary(const QString &name, uint minorVersion)
       return plugin;
     }
   }
-  return nullptr;
+  return PluginPointer<TagLibraryInterface>();
 }
 
 Template Engine::loadByName(const QString &name) const
