@@ -12,7 +12,7 @@ DEFINES += QT_NO_CAST_TO_ASCII QT_NO_CAST_FROM_ASCII QT_STRICT_ITERATORS QT_NO_U
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
+# DEFINES += USE_STATIC_PLUGIN_LOAD
 ios:!contains( DEFINES, USE_STATIC_PLUGIN_LOAD ) {
     INCLUDEPATH += ../i18n ../defaultfilters  ../defaulttags  ../loadertags
 }

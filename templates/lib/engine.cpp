@@ -368,6 +368,7 @@ EnginePrivate::loadCppLibrary(const QString &name, uint minorVersion)
 {
 #ifdef Q_OS_IOS
     auto plugin = manualPluginLoad(name);
+    {
 #else
   auto pluginIndex = 0;
 
