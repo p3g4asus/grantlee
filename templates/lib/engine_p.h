@@ -93,6 +93,8 @@ class EnginePrivate
   PluginPointer<TagLibraryInterface> loadCppLibrary(const QString &name,
                                                     uint minorVersion);
 
+  PluginPointer<TagLibraryInterface> manualPluginLoad(const QString& name);
+
   Q_DECLARE_PUBLIC(Engine)
   Engine *const q_ptr;
 

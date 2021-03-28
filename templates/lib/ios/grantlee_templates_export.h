@@ -1,7 +1,0 @@
-#ifndef GRANTLEE_TEMPLATES_EXPORT_H
-#define GRANTLEE_TEMPLATES_EXPORT_H
-#include <qglobal.h>
-#ifdef Q_OS_IOS
-#define GRANTLEE_TEMPLATES_EXPORT
-#endif
-#endif // GRANTLEE_TEMPLATES_EXPORT_H

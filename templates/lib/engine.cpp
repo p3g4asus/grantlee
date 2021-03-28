@@ -35,6 +35,20 @@
 #include <QtCore/QPluginLoader>
 #include <QtCore/QTextStream>
 
+#if defined(Q_OS_IOS)
+#if defined(USE_STATIC_PLUGIN_LOAD)
+Q_IMPORT_PLUGIN(I18nTagLibrary)
+Q_IMPORT_PLUGIN(LoaderTagLibrary)
+Q_IMPORT_PLUGIN(DefaultTagLibrary)
+Q_IMPORT_PLUGIN(DefaultFiltersLibrary)
+#else
+#include "../i18n/i18ntags.h"
+#include "../loadertags/loadertags.h"
+#include "../defaulttags/defaulttags.h"
+#include "../defaultfilters/defaultfilters.h"
+#endif
+#endif
+
 using namespace Grantlee;
 
 static const char __scriptableLibName[] = "grantlee_scriptabletags";
@@ -89,30 +103,43 @@ void Engine::setPluginPaths(const QStringList &dirs)
   Q_D(Engine);
   d->m_pluginDirs = dirs;
 }
-
-void Engine::manualPluginLoad(TagLibraryInterface *tli)
+#ifdef Q_OS_IOS
+#ifdef USE_STATIC_PLUGIN_LOAD
+PluginPointer<TagLibraryInterface> EnginePrivate::manualPluginLoad(const QString& name)
 {
-    QByteArray className = ((QObject *)tli)->metaObject()->className();
-    QString name;
-    if (className == "DefaultTagLibrary")
-        name = QStringLiteral("grantlee_defaulttags");
-    else if (className == "DefaultFiltersLibrary")
-        name = QStringLiteral("grantlee_defaultfilters");
-    else if (className == "LoaderTagLibrary")
-        name = QStringLiteral("grantlee_loadertags");
-    else if (className == "I18nTagLibrary")
-        name = QStringLiteral("grantlee_i18ntags");
-    if (!name.isEmpty()) {
-        manualPluginLoad(name, tli);
+    QByteArray className;
+    if (name == QStringLiteral("grantlee_defaulttags"))
+        className = "DefaultTagLibrary";
+    else if (name == QStringLiteral("grantlee_defaultfilters"))
+        className = "DefaultFiltersLibrary";
+    else if (name == QStringLiteral("grantlee_loadertags"))
+        className = "LoaderTagLibrary";
+    else if (name == QStringLiteral("grantlee_i18ntags"))
+        className = "I18nTagLibrary";
+    const auto staticInstances = QPluginLoader::staticInstances();
+    for (QObject *pluginObj : staticInstances) {
+        if (pluginObj->inherits("TagLibraryInterface") && pluginObj->metaObject()->className() == className)
+            return PluginPointer<TagLibraryInterface> ((TagLibraryInterface *)pluginObj);
     }
+    return PluginPointer<TagLibraryInterface>();
 }
-
-void Engine::manualPluginLoad(const QString& name, TagLibraryInterface *tli)
+#else
+PluginPointer<TagLibraryInterface> EnginePrivate::manualPluginLoad(const QString& name)
 {
-    Q_D(Engine);
-    auto plugin = PluginPointer<TagLibraryInterface>(tli);
-    d->m_libraries.insert(name, plugin);
+    QByteArray className;
+    if (name == QStringLiteral("grantlee_defaulttags"))
+        return PluginPointer<TagLibraryInterface> (new DefaultTagLibrary());
+    else if (name == QStringLiteral("grantlee_defaultfilters"))
+        return PluginPointer<TagLibraryInterface> (new DefaultFiltersLibrary());
+    else if (name == QStringLiteral("grantlee_loadertags"))
+        return PluginPointer<TagLibraryInterface> (new LoaderTagLibrary());
+    else if (name == QStringLiteral("grantlee_i18ntags"))
+        return PluginPointer<TagLibraryInterface> (new I18nTagLibrary());
+    else
+        return PluginPointer<TagLibraryInterface>();
 }
+#endif
+#endif
 
 void Engine::addPluginPath(const QString &dir)
 {
@@ -339,6 +366,9 @@ EnginePrivate::loadScriptableLibrary(const QString &name, uint minorVersion)
 PluginPointer<TagLibraryInterface>
 EnginePrivate::loadCppLibrary(const QString &name, uint minorVersion)
 {
+#ifdef Q_OS_IOS
+    auto plugin = manualPluginLoad(name);
+#else
   auto pluginIndex = 0;
 
   while (m_pluginDirs.size() > pluginIndex) {
@@ -375,7 +405,7 @@ EnginePrivate::loadCppLibrary(const QString &name, uint minorVersion)
 
     auto pluginPath = pluginDir.absoluteFilePath(list.first());
     auto plugin = PluginPointer<TagLibraryInterface>(pluginPath);
-
+#endif
     if (plugin) {
 #ifdef __COVERAGESCANNER__
       __coveragescanner_register_library(pluginPath.toLatin1().data());
